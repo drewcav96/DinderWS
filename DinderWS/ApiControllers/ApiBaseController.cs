@@ -1,4 +1,5 @@
 ﻿using DinderWS.Data;
+using DinderWS.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,7 +13,7 @@ namespace DinderWS.ApiControllers {
     /// <typeparam name="TControllerBase">The inheriting API Controller type.</typeparam>
     public abstract class ApiBaseController<TControllerBase> : ControllerBase
             where TControllerBase : ControllerBase {
-        private readonly UserManager<IdentityUser> _userManager;
+        protected readonly UserManager<IdentityUser> UserManager;
 
         /// <summary>
         /// The Logger instance.
@@ -55,7 +56,7 @@ namespace DinderWS.ApiControllers {
                 UserManager<IdentityUser> userManager,
                 ApplicationDbContext context) {
             Logger = logger;
-            _userManager = userManager;
+            UserManager = userManager;
             Context = context;
         }
 
@@ -64,7 +65,7 @@ namespace DinderWS.ApiControllers {
         /// </summary>
         /// <returns>The currently signed in User, or <see langword="null"/> if no User is signed in.</returns>
         protected async Task<IdentityUser> GetCurrentUserAsync() {
-            return await _userManager.GetUserAsync(User);
+            return await UserManager.GetUserAsync(User);
         }
     }
 }
