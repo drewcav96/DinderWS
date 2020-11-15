@@ -179,6 +179,7 @@ namespace DinderWS.ApiControllers {
         /// <returns>
         /// <see cref="StatusCodes.Status201Created"/> object result when the User is created.
         /// <see cref="StatusCodes.Status403Forbidden"/> object result when the User is already logged in.
+        /// <see cref="StatusCodes.Status409Conflict"/> object result when the User already exists.
         /// <see cref="StatusCodes.Status422UnprocessableEntity"/> object result when the view model contains validation errors.
         /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
@@ -196,6 +197,13 @@ namespace DinderWS.ApiControllers {
             // create the new user
             if (ModelState.IsValid) {
                 try {
+                    var existingUser = UserManager.FindByEmailAsync(vm.Email);
+
+                    if (existingUser != null) {
+                        return StatusCode(StatusCodes.Status409Conflict, new IdentityCreateResult(false) {
+                            Message = $"{vm.Email} is already registered!"
+                        });
+                    }
                     var newUser = vm.Create();
                     var result = await UserManager.CreateAsync(newUser, vm.Password);
 
