@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace DinderWS.Models.Identity {
     /// <summary>
-    /// The Result for an Identity Login.
+    /// The Result for an Identity Creation.
     /// </summary>
-    public class IdentityLoginResult : IResult {
+    public sealed class IdentityCreateResult : IResult {
         public bool Success { get; private set; }
         public string Message { get; set; }
         public string Error { get; set; }
@@ -18,8 +18,8 @@ namespace DinderWS.Models.Identity {
         /// <summary>
         /// Instantiates the result.
         /// </summary>
-        /// <param name="success">Whether the result succeeded.</param>
-        public IdentityLoginResult(bool success) {
+        /// <param name="success">Whether the result succeded.</param>
+        public IdentityCreateResult(bool success) {
             Success = success;
         }
     }
