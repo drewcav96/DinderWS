@@ -40,6 +40,7 @@ namespace DinderWS.ApiControllers {
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while completing the request.</param>
         /// <returns>
         /// <see cref="StatusCodes.Status200OK"/> object result.
+        /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpGet("Login")]
         [AllowAnonymous]
@@ -74,6 +75,7 @@ namespace DinderWS.ApiControllers {
         /// <returns>
         /// <see cref="StatusCodes.Status200OK"/> object result when the login attempt is successful.
         /// <see cref="StatusCodes.Status401Unauthorized"/> object result when the login attempt is unsuccessful.
+        /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpPost("Login")]
         [AllowAnonymous]
@@ -142,6 +144,7 @@ namespace DinderWS.ApiControllers {
         /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while completing the request.</param>
         /// <returns>
         /// <see cref="StatusCodes.Status200OK"/> object result when the login attempt is successful.
+        /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpPost("Logout")]
         [AllowAnonymous]
@@ -165,6 +168,55 @@ namespace DinderWS.ApiControllers {
             }
             return StatusCode(StatusCodes.Status200OK, new IdentityLoginResult(true) {
                 Message = $"No user to sign out."
+            });
+        }
+
+        /// <summary>
+        /// The Create POST request action.
+        /// </summary>
+        /// <param name="vm">The Identity Create view model from the POST request body.</param>
+        /// <param name="cancellationToken">The <see cref="CancellationToken"/> to observe while completing the request.</param>
+        /// <returns>
+        /// <see cref="StatusCodes.Status201Created"/> object result when the User is created.
+        /// <see cref="StatusCodes.Status403Forbidden"/> object result when the User is already logged in.
+        /// <see cref="StatusCodes.Status422UnprocessableEntity"/> object result when the view model contains validation errors.
+        /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
+        /// </returns>
+        [HttpPost("Create")]
+        [AllowAnonymous]
+        public async Task<IActionResult> PostCreateAsync(IdentityCreateViewModel vm, CancellationToken cancellationToken) {
+            // don't create a new user if we're already signed in
+            if (_signInManager.IsSignedIn(User)) {
+                var currentUser = await GetCurrentUserAsync();
+
+                return StatusCode(StatusCodes.Status403Forbidden, new IdentityCreateResult(false) {
+                    Message = $"{currentUser.Email} is already signed in!"
+                });
+            }
+            // create the new user
+            if (ModelState.IsValid) {
+                try {
+                    var newUser = vm.Create();
+                    var result = await UserManager.CreateAsync(newUser, vm.Password);
+
+                    // reload the new user from the context so all of its properties are populated
+                    newUser = await UserManager.FindByEmailAsync(newUser.Email);
+                    await _signInManager.SignInAsync(newUser, false);
+                    return StatusCode(StatusCodes.Status201Created, new IdentityCreateResult(true) {
+                        Message = "New User successfully created.",
+                        Id = newUser.Id
+                    });
+                } catch (Exception ex) {
+                    Logger.LogError(ex, "Unexpected Exception during Create POST.");
+                    return StatusCode(StatusCodes.Status500InternalServerError, new IdentityCreateResult(false) {
+                        Message = "Internal server error.",
+                        Error = ex.Message
+                    });
+                }
+            }
+            return StatusCode(StatusCodes.Status422UnprocessableEntity, new IdentityCreateResult(false) {
+                Message = "The view model failed validation checks.",
+                ValidationErrors = ModelStateErrors.Errors
             });
         }
     }
