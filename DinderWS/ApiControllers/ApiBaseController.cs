@@ -1,5 +1,4 @@
 ﻿using DinderWS.Data;
-using DinderWS.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,6 +43,12 @@ namespace DinderWS.ApiControllers {
         /// </summary>
         public string RefererUrl {
             get => Request.Headers[HeaderNames.Referer].ToString();
+        }
+        /// <summary>
+        /// The Validation details of the current context model state.
+        /// </summary>
+        public ValidationProblemDetails ModelStateErrors {
+            get => ProblemDetailsFactory?.CreateValidationProblemDetails(HttpContext, ModelState);
         }
 
         /// <summary>
