@@ -15,7 +15,7 @@ namespace DinderWS.ApiControllers {
     /// </summary>
     [Route("api/Identity")]
     [ApiController]
-    [Authorize]
+    [AllowAnonymous]
     public class ApiIdentityController : ApiBaseController<ApiIdentityController> {
         private readonly SignInManager<IdentityUser> _signInManager;
 
@@ -43,7 +43,6 @@ namespace DinderWS.ApiControllers {
         /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpGet("Login")]
-        [AllowAnonymous]
         public async Task<IActionResult> GetLoginAsync(CancellationToken cancellationToken) {
             // handle user already signed in
             if (_signInManager.IsSignedIn(User)) {
@@ -78,7 +77,6 @@ namespace DinderWS.ApiControllers {
         /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpPost("Login")]
-        [AllowAnonymous]
         public async Task<IActionResult> PostLoginAsync([FromBody] IdentityLoginViewModel vm, CancellationToken cancellationToken) {
             // handle user already signed in
             if (_signInManager.IsSignedIn(User)) {
@@ -147,7 +145,6 @@ namespace DinderWS.ApiControllers {
         /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpPost("Logout")]
-        [AllowAnonymous]
         public async Task<IActionResult> PostLogoutAsync(CancellationToken cancellationToken) {
             if (_signInManager.IsSignedIn(User)) {
                 try {
@@ -184,7 +181,6 @@ namespace DinderWS.ApiControllers {
         /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpPost("Create")]
-        [AllowAnonymous]
         public async Task<IActionResult> PostCreateAsync(IdentityCreateViewModel vm, CancellationToken cancellationToken) {
             // don't create a new user if we're already signed in
             if (_signInManager.IsSignedIn(User)) {
