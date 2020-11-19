@@ -1,16 +1,12 @@
 ﻿using DinderWS.Enums;
-using Microsoft.AspNetCore.Identity;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace DinderWS.Models.Profile {
     /// <summary>
-    /// The Profile entity model.
+    /// The Update View Model for the Profile entity.
     /// </summary>
-    public class Profile : IModel {
-        // Scalar fields
-        /// <summary>
-        /// The <see cref="IdentityUser"/>'s Id which this profile belongs to.
-        /// </summary>
-        public string Id { get; set; }
+    public sealed class ProfileUpdateViewModel : IUpdateViewModel<Profile> {
         /// <summary>
         /// The given name for this profile.
         /// </summary>
@@ -26,6 +22,7 @@ namespace DinderWS.Models.Profile {
         /// <summary>
         /// The URL of the avatar for this profile.
         /// </summary>
+        [DataType(DataType.ImageUrl)]
         public string AvatarUrl { get; set; }
         /// <summary>
         /// The dietary restriction preferences for this profile.
@@ -36,11 +33,16 @@ namespace DinderWS.Models.Profile {
         /// </summary>
         public EInterest Interests { get; set; }
 
-        // Reference fields
-        /// <summary>
-        /// The <see cref="IdentityUser"/> entity this profile belongs to.
-        /// </summary>
-        
-        public virtual IdentityUser Identity { get; set; }
+        public void Update(Profile model) {
+            if (model == null) {
+                throw new ArgumentNullException(nameof(model));
+            }
+            model.Firstname = Firstname;
+            model.Lastname = Lastname;
+            model.Gender = Gender;
+            model.AvatarUrl = AvatarUrl;
+            model.DietaryRestrictions = DietaryRestrictions;
+            model.Interests = Interests;
+        }
     }
 }

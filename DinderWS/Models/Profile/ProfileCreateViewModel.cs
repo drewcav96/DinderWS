@@ -1,16 +1,11 @@
 ﻿using DinderWS.Enums;
-using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
 
 namespace DinderWS.Models.Profile {
     /// <summary>
-    /// The Profile entity model.
+    /// The Create View Model for the Profile entity.
     /// </summary>
-    public class Profile : IModel {
-        // Scalar fields
-        /// <summary>
-        /// The <see cref="IdentityUser"/>'s Id which this profile belongs to.
-        /// </summary>
-        public string Id { get; set; }
+    public sealed class ProfileCreateViewModel : ICreateViewModel<Profile> {
         /// <summary>
         /// The given name for this profile.
         /// </summary>
@@ -26,6 +21,7 @@ namespace DinderWS.Models.Profile {
         /// <summary>
         /// The URL of the avatar for this profile.
         /// </summary>
+        [DataType(DataType.ImageUrl)]
         public string AvatarUrl { get; set; }
         /// <summary>
         /// The dietary restriction preferences for this profile.
@@ -36,11 +32,27 @@ namespace DinderWS.Models.Profile {
         /// </summary>
         public EInterest Interests { get; set; }
 
-        // Reference fields
         /// <summary>
-        /// The <see cref="IdentityUser"/> entity this profile belongs to.
+        /// Creates the profile for the specified User Id.
         /// </summary>
-        
-        public virtual IdentityUser Identity { get; set; }
+        /// <param name="userId">The User Id this profile belongs to.</param>
+        /// <returns>The new profile entity.</returns>
+        public Profile Create(string userId) {
+            var profile = Create();
+
+            profile.Id = userId;
+            return profile;
+        }
+
+        public Profile Create() {
+            return new Profile {
+                Firstname = Firstname,
+                Lastname = Lastname,
+                Gender = Gender,
+                AvatarUrl = AvatarUrl,
+                DietaryRestrictions = DietaryRestrictions,
+                Interests = Interests
+            };
+        }
     }
 }
