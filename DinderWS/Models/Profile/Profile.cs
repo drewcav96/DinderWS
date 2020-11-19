@@ -40,7 +40,10 @@ namespace DinderWS.Models.Profile {
         /// <summary>
         /// The <see cref="IdentityUser"/> entity this profile belongs to.
         /// </summary>
-        
         public virtual IdentityUser Identity { get; set; }
+        /// <summary>
+        /// The <see cref="Experience.Experience"/> that belongs to this profile, if any.
+        /// </summary>
+        public virtual Experience.Experience Experience { get; set; }
     }
 }
