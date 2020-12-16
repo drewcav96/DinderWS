@@ -60,7 +60,7 @@ namespace DinderWS.Data {
                     .HasColumnName("AvatarUrl")
                     .HasMaxLength(2048)
                     .IsUnicode(false)
-                    .IsRequired();
+                    .IsRequired(false);
                 entity.Property(model => model.DietaryRestrictions)
                     .HasColumnName("DietaryRestrictions")
                     .IsRequired();
