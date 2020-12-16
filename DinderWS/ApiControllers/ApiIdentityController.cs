@@ -193,7 +193,7 @@ namespace DinderWS.ApiControllers {
             // create the new user
             if (ModelState.IsValid) {
                 try {
-                    var existingUser = UserManager.FindByEmailAsync(vm.Email);
+                    var existingUser = await UserManager.FindByEmailAsync(vm.Email);
 
                     if (existingUser != null) {
                         return StatusCode(StatusCodes.Status409Conflict, new IdentityCreateResult(false) {
@@ -204,7 +204,7 @@ namespace DinderWS.ApiControllers {
                     var result = await UserManager.CreateAsync(newUser, vm.Password);
 
                     // reload the new user from the context so all of its properties are populated
-                    newUser = await UserManager.FindByEmailAsync(newUser.Email);
+                    //newUser = await UserManager.FindByEmailAsync(newUser.Email);
                     await _signInManager.SignInAsync(newUser, false);
                     return StatusCode(StatusCodes.Status201Created, new IdentityCreateResult(true) {
                         Message = "New User successfully created.",

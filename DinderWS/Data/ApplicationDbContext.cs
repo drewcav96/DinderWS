@@ -60,7 +60,7 @@ namespace DinderWS.Data {
                     .HasColumnName("AvatarUrl")
                     .HasMaxLength(2048)
                     .IsUnicode(false)
-                    .IsRequired();
+                    .IsRequired(false);
                 entity.Property(model => model.DietaryRestrictions)
                     .HasColumnName("DietaryRestrictions")
                     .IsRequired();
@@ -73,7 +73,7 @@ namespace DinderWS.Data {
                     .HasConstraintName("FK_Identity-Profile")
                     .OnDelete(DeleteBehavior.ClientCascade);
                 entity.HasKey(model => model.Id);
-                entity.ToTable("AspNetProfiles");
+                entity.ToTable("Profiles");
             });
             // ==================================================
             // Experience entity 
@@ -112,6 +112,8 @@ namespace DinderWS.Data {
                     .HasForeignKey<Experience>(model => model.Id)
                     .HasConstraintName("FK_Profile-Experience")
                     .OnDelete(DeleteBehavior.ClientCascade);
+                entity.HasKey(model => model.Id);
+                entity.ToTable("Experiences");
             });
         }
     }

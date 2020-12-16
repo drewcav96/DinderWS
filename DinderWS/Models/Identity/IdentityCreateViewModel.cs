@@ -25,6 +25,7 @@ namespace DinderWS.Models.Identity {
 
         public IdentityUser Create() {
             return new IdentityUser {
+                UserName = Email,
                 Email = Email
             };
         }
