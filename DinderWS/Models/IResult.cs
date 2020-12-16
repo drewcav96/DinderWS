@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DinderWS.Identity {
+namespace DinderWS.Models {
     /// <summary>
     /// Interface for the Result.
     /// </summary>

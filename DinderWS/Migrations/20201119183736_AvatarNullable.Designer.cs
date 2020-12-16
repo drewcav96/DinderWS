@@ -4,14 +4,16 @@ using DinderWS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace DinderWS.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201119183736_AvatarNullable")]
+    partial class AvatarNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,56 +49,13 @@ namespace DinderWS.Migrations
                         .HasColumnName("LocationLong")
                         .HasColumnType("float");
 
-                    b.Property<long?>("MatchId")
-                        .HasColumnType("bigint");
-
                     b.Property<DateTimeOffset>("Timestamp")
                         .HasColumnName("Timestamp")
                         .HasColumnType("datetimeoffset");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MatchId");
 
                     b.ToTable("Experiences");
-                });
-
-            modelBuilder.Entity("DinderWS.Models.Match.Match", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:IdentityIncrement", 1)
-                        .HasAnnotation("SqlServer:IdentitySeed", 1)
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("AvgLatitude")
-                        .HasColumnName("AvgLatitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("AvgLongitude")
-                        .HasColumnName("AvgLongitude")
-                        .HasColumnType("float");
-
-                    b.Property<int>("CuisineType")
-                        .HasColumnName("CuisineType")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("Gender")
-                        .HasColumnName("Gender")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("GroupSize")
-                        .HasColumnName("GroupSize")
-                        .HasColumnType("tinyint");
-
-                    b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnName("Timestamp")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("DinderWS.Models.Profile.Profile", b =>
@@ -141,30 +100,7 @@ namespace DinderWS.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Profiles");
-                });
-
-            modelBuilder.Entity("DinderWS.Models.Rejects.Reject", b =>
-                {
-                    b.Property<string>("ExperienceId")
-                        .HasColumnName("ExperienceId")
-                        .HasColumnType("nvarchar(450)")
-                        .HasMaxLength(450)
-                        .IsUnicode(true);
-
-                    b.Property<long>("MatchId")
-                        .HasColumnName("MatchId")
-                        .HasColumnType("bigint");
-
-                    b.Property<DateTimeOffset>("Timestamp")
-                        .HasColumnName("Timestamp")
-                        .HasColumnType("datetimeoffset");
-
-                    b.HasKey("ExperienceId", "MatchId");
-
-                    b.HasIndex("MatchId");
-
-                    b.ToTable("Rejects");
+                    b.ToTable("AspNetProfiles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -382,12 +318,6 @@ namespace DinderWS.Migrations
                         .HasConstraintName("FK_Identity-Experience")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
-
-                    b.HasOne("DinderWS.Models.Match.Match", "Match")
-                        .WithMany("Experiences")
-                        .HasForeignKey("MatchId")
-                        .HasConstraintName("FK_Experience-Match")
-                        .OnDelete(DeleteBehavior.ClientCascade);
                 });
 
             modelBuilder.Entity("DinderWS.Models.Profile.Profile", b =>
@@ -396,23 +326,6 @@ namespace DinderWS.Migrations
                         .WithOne()
                         .HasForeignKey("DinderWS.Models.Profile.Profile", "Id")
                         .HasConstraintName("FK_Identity-Profile")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DinderWS.Models.Rejects.Reject", b =>
-                {
-                    b.HasOne("DinderWS.Models.Experience.Experience", "Experience")
-                        .WithMany("Rejects")
-                        .HasForeignKey("ExperienceId")
-                        .HasConstraintName("FK_Experience-Reject")
-                        .OnDelete(DeleteBehavior.ClientCascade)
-                        .IsRequired();
-
-                    b.HasOne("DinderWS.Models.Match.Match", "Match")
-                        .WithMany("Rejects")
-                        .HasForeignKey("MatchId")
-                        .HasConstraintName("FK_Match-Reject")
                         .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
                 });

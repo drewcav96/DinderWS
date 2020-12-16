@@ -25,7 +25,7 @@ namespace DinderWS.Migrations
                     table.ForeignKey(
                         name: "FK_Profile-Experience",
                         column: x => x.Id,
-                        principalTable: "AspNetProfiles",
+                        principalTable: "Profiles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(

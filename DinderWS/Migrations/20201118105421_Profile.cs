@@ -7,7 +7,7 @@ namespace DinderWS.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AspNetProfiles",
+                name: "Profiles",
                 columns: table => new
                 {
                     Id = table.Column<string>(maxLength: 450, nullable: false),
@@ -20,7 +20,7 @@ namespace DinderWS.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AspNetProfiles", x => x.Id);
+                    table.PrimaryKey("PK_Profiles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Identity-Profile",
                         column: x => x.Id,
@@ -33,7 +33,7 @@ namespace DinderWS.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetProfiles");
+                name: "Profiles");
         }
     }
 }

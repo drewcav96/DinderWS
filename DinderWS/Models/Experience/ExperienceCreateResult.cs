@@ -1,5 +1,4 @@
-﻿using DinderWS.Identity;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DinderWS.Models.Experience {
     /// <summary>

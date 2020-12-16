@@ -1,6 +1,7 @@
 ﻿using DinderWS.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 
 namespace DinderWS.Models.Experience {
     /// <summary>
@@ -36,15 +37,36 @@ namespace DinderWS.Models.Experience {
         /// The timestamp when this experience was submitted.
         /// </summary>
         public DateTimeOffset Timestamp { get; set; }
+        /// <summary>
+        /// The Id of the Match this experience belongs to.
+        /// </summary>
+        public long? MatchId { get; set; }
 
         // Reference fields
         /// <summary>
-        /// The <see cref="IdentityUser"/> entity this profile belongs to.
+        /// The <see cref="IdentityUser"/> entity this experience belongs to.
         /// </summary>
         public virtual IdentityUser Identity { get; set; }
         /// <summary>
-        /// The <see cref="Profile.Profile"/> entity this profile belongs to.
+        /// The <see cref="Profile.Profile"/> entity this experience belongs to.
         /// </summary>
         public virtual Profile.Profile Profile { get; set; }
+        /// <summary>
+        /// The <see cref="Match.Match"/> entity this experience belongs to.
+        /// </summary>
+        public virtual Match.Match Match { get; set; }
+        public virtual ICollection<Rejects.Reject> Rejects { get; set; }
+
+        public bool RejectMatch() {
+            if (MatchId.HasValue) {
+                Rejects.Add(new Rejects.Reject {
+                    ExperienceId = Id,
+                    MatchId = MatchId.Value
+                });
+                MatchId = null;
+                return true;
+            }
+            return false;
+        }
     }
 }
