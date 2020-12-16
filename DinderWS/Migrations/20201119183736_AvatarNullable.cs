@@ -8,7 +8,7 @@ namespace DinderWS.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "AvatarUrl",
-                table: "AspNetProfiles",
+                table: "Profiles",
                 unicode: false,
                 maxLength: 2048,
                 nullable: true,
@@ -22,7 +22,7 @@ namespace DinderWS.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "AvatarUrl",
-                table: "AspNetProfiles",
+                table: "Profiles",
                 type: "varchar(2048)",
                 unicode: false,
                 maxLength: 2048,

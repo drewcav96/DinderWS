@@ -1,9 +1,5 @@
 ﻿using DinderWS.Enums;
-using DinderWS.Identity;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace DinderWS.Models.Profile {
     /// <summary>
@@ -53,7 +49,7 @@ namespace DinderWS.Models.Profile {
                 Message = "The requested profile could not be found.";
             } else {
                 Success = true;
-                Message = $"Profile for {model.Identity.Email}.";
+                Message = $"Profile for {model.Firstname} {model.Lastname}.";
                 Id = model.Id;
                 Firstname = model.Firstname;
                 Lastname = model.Lastname;

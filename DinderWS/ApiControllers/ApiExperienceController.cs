@@ -74,7 +74,6 @@ namespace DinderWS.ApiControllers {
         /// <see cref="StatusCodes.Status200OK"/> object result when the experience is successfully created.
         /// <see cref="StatusCodes.Status400BadRequest"/> object result when the User Id is unspecified or invalid.
         /// <see cref="StatusCodes.Status404NotFound"/> object result when the User Id does not exist.
-        /// <see cref="StatusCodes.Status409Conflict"/> object result when the User Id already has an experience associated with it.
         /// <see cref="StatusCodes.Status500InternalServerError"/> object result when there was an unexpected Exception.
         /// </returns>
         [HttpPost("Create/{id}")]
@@ -94,10 +93,17 @@ namespace DinderWS.ApiControllers {
             var profileExists = await Context.Profiles
                 .AnyAsync(e => e.Id == id, cancellationToken);
 
-            if (profileExists) {
-                return StatusCode(StatusCodes.Status409Conflict, new ExperienceCreateResult(false) {
-                    Message = "Experience already exists for the specified User Id."
+            if (!profileExists) {
+                return StatusCode(StatusCodes.Status404NotFound, new ExperienceCreateResult(false) {
+                    Message = "No profile exists for the specified Id."
                 });
+            }
+            var experience = await Context.Experiences
+                .SingleOrDefaultAsync(e => e.Id == id, cancellationToken);
+
+            if (experience != null) {
+                Context.Entry(experience).State = EntityState.Deleted;
+                await Context.SaveChangesAsync(cancellationToken);
             }
             try {
                 var exp = vm.Create(id);

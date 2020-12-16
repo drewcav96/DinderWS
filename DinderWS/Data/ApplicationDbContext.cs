@@ -1,5 +1,7 @@
 ﻿using DinderWS.Models.Experience;
+using DinderWS.Models.Match;
 using DinderWS.Models.Profile;
+using DinderWS.Models.Rejects;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -19,6 +21,8 @@ namespace DinderWS.Data {
         /// Contextual <see cref="Experience"/> entities.
         /// </summary>
         public DbSet<Experience> Experiences { get; set; }
+        public DbSet<Match> Matches { get; set; }
+        public DbSet<Reject> Rejects { get; set; }
 
         /// <summary>
         /// Instantiates the Application Database Context with dependency injection.
@@ -112,8 +116,68 @@ namespace DinderWS.Data {
                     .HasForeignKey<Experience>(model => model.Id)
                     .HasConstraintName("FK_Profile-Experience")
                     .OnDelete(DeleteBehavior.ClientCascade);
+                entity.HasMany(model => model.Rejects)
+                    .WithOne(other => other.Experience)
+                    .HasForeignKey(other => other.ExperienceId)
+                    .HasConstraintName("FK_Experience-Reject")
+                    .OnDelete(DeleteBehavior.ClientCascade);
                 entity.HasKey(model => model.Id);
                 entity.ToTable("Experiences");
+            });
+            // ==================================================
+            // Match entity 
+            // ==================================================
+            builder.Entity<Match>(entity => {
+                entity.Property(model => model.Id)
+                    .UseIdentityColumn()
+                    .IsRequired();
+                entity.Property(model => model.GroupSize)
+                    .HasColumnName("GroupSize")
+                    .IsRequired();
+                entity.Property(model => model.Gender)
+                    .HasColumnName("Gender")
+                    .IsRequired();
+                entity.Property(model => model.CuisineType)
+                    .HasColumnName("CuisineType")
+                    .IsRequired();
+                entity.Property(model => model.Timestamp)
+                    .HasColumnName("Timestamp")
+                    .IsRequired();
+                entity.Property(model => model.AvgLongitude)
+                    .HasColumnName("AvgLongitude")
+                    .IsRequired();
+                entity.Property(model => model.AvgLatitude)
+                    .HasColumnName("AvgLatitude")
+                    .IsRequired();
+                entity.HasMany(model => model.Experiences)
+                    .WithOne(other => other.Match)
+                    .HasForeignKey(other => other.MatchId)
+                    .HasConstraintName("FK_Experience-Match")
+                    .OnDelete(DeleteBehavior.ClientCascade);
+                entity.HasMany(model => model.Rejects)
+                    .WithOne(other => other.Match)
+                    .HasForeignKey(other => other.MatchId)
+                    .HasConstraintName("FK_Match-Reject")
+                    .OnDelete(DeleteBehavior.ClientCascade);
+                entity.HasKey(Model => Model.Id);
+                entity.ToTable("Matches");
+            });
+            // ==================================================
+            // Reject relationship 
+            // ==================================================
+            builder.Entity<Reject>(entity => {
+                entity.Property(model => model.ExperienceId)
+                    .HasColumnName("ExperienceId")
+                    .HasMaxLength(450)
+                    .IsUnicode()
+                    .IsRequired();
+                entity.Property(model => model.MatchId)
+                    .HasColumnName("MatchId")
+                    .IsRequired();
+                entity.Property(model => model.Timestamp)
+                    .HasColumnName("Timestamp")
+                    .IsRequired();
+                entity.HasKey(model => new { model.ExperienceId, model.MatchId });
             });
         }
     }

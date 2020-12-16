@@ -1,5 +1,4 @@
 ﻿using DinderWS.Enums;
-using DinderWS.Identity;
 using System;
 using System.Collections.Generic;
 
@@ -40,6 +39,7 @@ namespace DinderWS.Models.Experience {
         /// The timestamp when this experience was submitted.
         /// </summary>
         public DateTimeOffset Timestamp { get; set; }
+        public long? MatchId { get; set; }
 
         /// <summary>
         /// Instantiates the result.
@@ -59,6 +59,7 @@ namespace DinderWS.Models.Experience {
                 Longitude = model.Longitude;
                 Latitude = model.Latitude;
                 Timestamp = model.Timestamp;
+                MatchId = model.MatchId;
             }
         }
     }

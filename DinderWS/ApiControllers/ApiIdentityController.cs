@@ -203,6 +203,11 @@ namespace DinderWS.ApiControllers {
                     var newUser = vm.Create();
                     var result = await UserManager.CreateAsync(newUser, vm.Password);
 
+                    if (!result.Succeeded) {
+                        return StatusCode(StatusCodes.Status417ExpectationFailed, new IdentityCreateResult(false) {
+                            Message = result.Errors.ToString()
+                        });
+                    }
                     // reload the new user from the context so all of its properties are populated
                     //newUser = await UserManager.FindByEmailAsync(newUser.Email);
                     await _signInManager.SignInAsync(newUser, false);
