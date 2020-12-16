@@ -63,6 +63,73 @@ namespace DinderWS.ApiControllers {
                 });
             }
         }
+        /// <summary>
+        /// updates the rating of a different profile based on the rating of the user giving the rating
+        /// </summary>
+        /// id is the id of the profile being rated
+        /// myrating is the rating of the user giving the rating
+        /// yourrating is the rating of the user recieving the rating
+        /// givenrating is the rating given
+        /// <returns></returns>
+        public async Task<IActionResult> RateProfileAsync(string id, int GivenRating, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, new ProfileUpdateResult(false)
+                {
+                    Message = "The User Id is unspecified."
+                });
+            }
+            var currentUser = await UserManager.FindByIdAsync(id);
+
+            if (currentUser == null)
+            {
+                return StatusCode(StatusCodes.Status404NotFound, new ProfileUpdateResult(false)
+                {
+                    Message = "No User exists with specified Id."
+                });
+            }
+            var profileExists = await Context.Profiles
+                .AnyAsync(e => e.Id == id, cancellationToken);
+
+            if (!profileExists)
+            {
+                return StatusCode(StatusCodes.Status409Conflict, new ProfileUpdateResult(false)
+                {
+                    Message = "No profile exists for the specified User Id."
+                });
+            }
+            try
+            {
+                var profile = await Context.Profiles
+                    .SingleAsync(e => e.Id == id, cancellationToken);
+                int NewRating = profile.Rating + GivenRating;
+                if (NewRating >= 19)
+                {
+                    profile.Rating = 10;
+                }
+                else
+                {
+                    profile.Rating = NewRating / 2;
+                }
+                Logger.LogInformation($"{id}'s rating was updated.");
+                return StatusCode(StatusCodes.Status200OK, new ProfileUpdateResult(true)
+                {
+                    Message = "Profile successfully updated.",
+                    Id = profile.Id
+                });
+            }
+
+            catch (Exception ex)
+            {
+                Logger.LogError(ex, "Unexpected Exception during Rating Set.");
+                return StatusCode(StatusCodes.Status500InternalServerError, new ProfileDetailResult(null)
+                {
+                    Message = "Internal server error.",
+                    Error = ex.Message
+                });
+            }
+        }
 
         /// <summary>
         /// The Create POST request action.

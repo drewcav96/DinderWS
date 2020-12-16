@@ -32,7 +32,6 @@ namespace DinderWS.Models.Profile {
         public EGender Gender { get; private set; }
         /// <summary>
         /// The URL of the avatar for this profile.
-        /// </summary>
         public string AvatarUrl { get; private set; }
         /// <summary>
         /// The dietary restriction preferences for this profile.

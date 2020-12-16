@@ -36,10 +36,12 @@ namespace DinderWS.Models.Profile {
         /// </summary>
         public EInterest Interests { get; set; }
 
+        public int Rating { get; set; }
         // Reference fields
         /// <summary>
         /// The <see cref="IdentityUser"/> entity this profile belongs to.
         /// </summary>
+
         public virtual IdentityUser Identity { get; set; }
         /// <summary>
         /// The <see cref="Experience.Experience"/> that belongs to this profile, if any.

@@ -48,6 +48,9 @@ namespace DinderWS.Data {
                     .HasMaxLength(35)
                     .IsUnicode()
                     .IsRequired();
+                entity.Property(model => model.Rating)
+                    .HasColumnName("Rating")
+                    .IsRequired();
                 entity.Property(model => model.Lastname)
                     .HasColumnName("Lastname")
                     .HasMaxLength(35)
