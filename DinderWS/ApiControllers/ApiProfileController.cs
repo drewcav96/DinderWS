@@ -112,6 +112,7 @@ namespace DinderWS.ApiControllers {
                 {
                     profile.Rating = NewRating / 2;
                 }
+                await Context.SaveChangesAsync(cancellationToken);
                 Logger.LogInformation($"{id}'s rating was updated.");
                 return StatusCode(StatusCodes.Status200OK, new ProfileUpdateResult(true)
                 {
