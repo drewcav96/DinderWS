@@ -37,6 +37,7 @@ namespace DinderWS.Models.Profile {
         /// The interest preferences for this profile.
         /// </summary>
         public EInterest Interests { get; private set; }
+        public int Rating { get; private set; }
 
         /// <summary>
         /// Instantiates the result.
@@ -56,6 +57,7 @@ namespace DinderWS.Models.Profile {
                 AvatarUrl = model.AvatarUrl;
                 DietaryRestrictions = model.DietaryRestrictions;
                 Interests = model.Interests;
+                Rating = model.Rating;
             }
         }
     }
